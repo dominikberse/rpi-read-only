@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+# root check
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
 # disclaimer
 printf "\n\n##########\n"
 printf "WARNING: This may break your system!\n"
@@ -10,8 +16,8 @@ printf "##########\n\n\n"
 
 read -p "Are you sure you want to continue? [yes|No]" confirm
 case $confirm in
-    yes ) break;;
-    * ) echo "Please type [yes] in order to continue." ; exit;;
+    yes ) ;;
+    * ) echo "Please type [yes] in order to continue." ; exit 1;;
 esac
 
 # update system
