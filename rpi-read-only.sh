@@ -28,12 +28,11 @@ apt-get update -y
 
 # upgrade system if neccessary
 printf "\n\n##########\n"
-printf "Upgrade system before going read-only? [y|n]\n"
-read yn
+read -p "Upgrade system before going read-only? [y|N] "
 case $yn in
     [Yy]* ) apt-get upgrade -y ; break;;
     [Nn]* ) break;;
-    * ) echo "Invalid answer. Quitting." ; exit 1;;
+    * ) break;;
 esac
 
 # change logger
