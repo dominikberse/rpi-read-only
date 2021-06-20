@@ -2,15 +2,15 @@
 set -e
 
 # disclaimer
-printf "##########\n"
+printf "\n\n##########\n"
 printf "WARNING: This may break your system!\n"
 printf "This script is intended to be used on a fresh installation.\n"
 printf "Backup any relevant data before executing this script.\n"
 printf "##########\n\n\n"
 
-read -p "Are you sure you want to continue? [yes|No]"
-case $yn in
-    [Yy]* ) break;;
+read -p "Are you sure you want to continue? [yes|No]" confirm
+case $confirm in
+    yes ) break;;
     * ) echo "Please type [yes] in order to continue.";; exit;;
 esac
 
