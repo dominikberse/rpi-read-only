@@ -11,7 +11,7 @@ printf "##########\n\n\n"
 read -p "Are you sure you want to continue? [yes|No]" confirm
 case $confirm in
     yes ) break;;
-    * ) echo "Please type [yes] in order to continue.";; exit;;
+    * ) echo "Please type [yes] in order to continue." ; exit;;
 esac
 
 # update system
@@ -24,7 +24,7 @@ printf "\n\n##########\n"
 printf "Upgrade system before going read-only? [Y/n]\n"
 select yn in "Y" "N" ""; do
     case $yn in
-        y|Y ) apt-get upgrade -y; break;;
+        y|Y ) apt-get upgrade -y ; break;;
         n|N ) break;;
     esac
 done
