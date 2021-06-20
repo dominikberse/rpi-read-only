@@ -3,7 +3,7 @@ set -e
 
 # root check
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
+   echo "This script must be run as root. Quitting." 
    exit 1
 fi
 
@@ -14,42 +14,41 @@ printf "This script is intended to be used on a fresh installation.\n"
 printf "Backup any relevant data before executing this script.\n"
 printf "##########\n\n\n"
 
-read -p "Are you sure you want to continue? [yes|No]" confirm
+read -p "Are you sure you want to continue? [yes|No]\n" confirm
 case $confirm in
     yes ) ;;
-    * ) echo "Please type [yes] in order to continue." ; exit 1;;
+    * ) echo "Please type [yes] in order to continue. Quitting." ; exit 1;;
 esac
 
 # update system
 printf "\n\n##########\n"
-printf "Updating sources...\n"
+printf "Updating sources...\n\n"
 apt-get update -y
 
 # upgrade system if neccessary
 printf "\n\n##########\n"
-printf "Upgrade system before going read-only? [Y/n]\n"
-select yn in "Y" "N" ""; do
-    case $yn in
-        y|Y ) apt-get upgrade -y ; break;;
-        n|N ) break;;
-    esac
-done
+read -p "Upgrade system before going read-only? [y|n]\n" yn
+case $yn in
+    [Yy]* ) apt-get upgrade -y ; break;;
+    [Nn]* ) break;;
+    * ) echo "Invalid answer. Quitting." ; exit 1;;
+esac
 
 # change logger
 printf "\n\n##########\n"
-printf "Installing in-memory logger...\n"
+printf "Installing in-memory logger...\n\n"
 apt-get install -y busybox-syslogd
 apt-get remove -y --purge rsyslog
 
 # remove unnecessary
 printf "\n\n##########\n"
-printf "Cleaning up...\n"
+printf "Cleaning up...\n\n"
 apt-get remove -y --purge triggerhappy logrotate dphys-swapfile
 apt-get autoremove -y --purge
 
 # edit /boot/cmdline.txt
 printf "\n\n##########\n"
-printf "Updating /boot/config.txt\n"
+printf "Updating /boot/config.txt\n\n"
 sed -i '$s/$/ fastboot noswap ro/' /boot/cmdline.txt
 
 # set mountpoints
@@ -62,8 +61,8 @@ echo "tmpfs        /var/tmp        tmpfs   nosuid,nodev         0       0" >> /e
 sed -i '/^PARTUUID/ s/defaults/defaults,ro/' /etc/fstab
 
 # move to temporary file system
-printf "\n\n##########"
-printf "Moving r/w files to /tmp ..."
+printf "\n\n##########\n"
+printf "Moving r/w files to /tmp ...\n\n"
 rm -rf /var/lib/dhcp /var/lib/dhcpcd5 /var/run/wpa_supplicant /etc/resolv.conf
 ln -s /tmp/dhcp /var/lib/dhcp
 ln -s /tmp/dhcpcd5 /var/lib/dhcpcd5
@@ -77,8 +76,8 @@ ln -s /tmp/random-seed /var/lib/systemd/random-seed
 sed -i '/^\[Service\]/a\ExecStartPre=\/bin\/echo "" > \/tmp\/random-seed' /lib/systemd/system/systemd-random-seed.service
 
 # configure tmpfiles.d
-printf "\n\n##########"
-printf "Adding tmpfiles.d configuration..."
+printf "\n\n##########\n"
+printf "Adding tmpfiles.d configuration...\n\n"
 tee /etc/tmpfiles.d/tmpfiles.conf > /dev/null <<'EOF'
 # list required directories
 
@@ -95,8 +94,8 @@ EOF
 ln -s /etc/tmpfiles.d/tmpfiles.conf /home/pi/.tmpfiles.conf
 
 # provide shortcuts
-printf "\n\n##########"
-printf "Generating rw/ro shortcuts..."
+printf "\n\n##########\n"
+printf "Generating rw/ro shortcuts...\n\n"
 tee -a /etc/bash.bashrc > /dev/null <<'EOF'
 
 set_bash_prompt() {
@@ -111,8 +110,8 @@ PROMPT_COMMAND=set_bash_prompt
 EOF
 
 # create initialization script
-printf "\n\n##########"
-printf "Generating user-init script..."
+printf "\n\n##########\n"
+printf "Generating user-init script...\n\n"
 tee /home/pi/.init-readonly-fs.sh > /dev/null <<'EOF'
 #!/bin/bash
 
@@ -128,8 +127,8 @@ chown pi /home/pi/.init-readonly-fs.sh
 chmod +x /home/pi/.init-readonly-fs.sh
 
 # run initialization on startup
-printf "\n\n##########"
-printf "Generating user-init service..."
+printf "\n\n##########\n"
+printf "Generating user-init service...\n\n"
 tee /etc/systemd/system/init-readonly-fs.service > /dev/null <<'EOF'
 [Unit]
 After = network-online.target
@@ -148,7 +147,7 @@ systemctl daemon-reload
 systemctl enable init-readonly-fs.service
 
 # all done
-printf "\n\n##########"
-echo "Rebooting... cross your fingers [ENTER]."
+printf "\n\n##########\n"
+echo "Rebooting... cross your fingers [ENTER].\n"
 read -p
 reboot
