@@ -6,6 +6,7 @@ Simple script to put Raspberry Pi OS Lite to readonly mode and heavily reduce th
 ## Usage
 ```
 wget https://raw.githubusercontent.com/dominikberse/rpi-read-only/main/rpi-read-only.sh
+chmod +x rpi-read-only.sh
 sudo ./rpi-read-only.sh
 ```
 
