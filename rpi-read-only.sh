@@ -49,12 +49,11 @@ apt-get autoremove -y --purge
 
 # edit /boot/cmdline.txt
 printf "\n\n##########\n"
-printf "Updating /boot/config.txt\n\n"
+printf "Updating /boot/config.txt\n"
 sed -i '$s/$/ fastboot noswap ro/' /boot/cmdline.txt
 
 # set mountpoints
-printf "\n\n##########"
-printf "Adjusting /etc/fstab ..."
+printf "Adjusting /etc/fstab\n"
 echo "tmpfs        /tmp            tmpfs   nosuid,nodev,mode=1777         0       0" >> /etc/fstab
 echo "tmpfs        /var/spool        tmpfs   nosuid,nodev         0       0" >> /etc/fstab
 echo "tmpfs        /var/log        tmpfs   nosuid,nodev         0       0" >> /etc/fstab
@@ -62,8 +61,7 @@ echo "tmpfs        /var/tmp        tmpfs   nosuid,nodev         0       0" >> /e
 sed -i '/^PARTUUID/ s/defaults/defaults,ro/' /etc/fstab
 
 # move to temporary file system
-printf "\n\n##########\n"
-printf "Moving r/w files to /tmp ...\n\n"
+printf "Moving r/w files to /tmp\n"
 rm -rf /var/lib/dhcp /var/lib/dhcpcd5 /var/run/wpa_supplicant /etc/resolv.conf
 ln -s /tmp/dhcp /var/lib/dhcp
 ln -s /tmp/dhcpcd5 /var/lib/dhcpcd5
@@ -77,8 +75,7 @@ ln -s /tmp/random-seed /var/lib/systemd/random-seed
 sed -i '/^\[Service\]/a\ExecStartPre=\/bin\/echo "" > \/tmp\/random-seed' /lib/systemd/system/systemd-random-seed.service
 
 # configure tmpfiles.d
-printf "\n\n##########\n"
-printf "Adding tmpfiles.d configuration...\n\n"
+printf "Adding tmpfiles.d configuration\n"
 tee /etc/tmpfiles.d/tmpfiles.conf > /dev/null <<'EOF'
 # list required directories
 
@@ -95,8 +92,7 @@ EOF
 ln -s /etc/tmpfiles.d/tmpfiles.conf /home/pi/.tmpfiles.conf
 
 # provide shortcuts
-printf "\n\n##########\n"
-printf "Generating rw/ro shortcuts...\n\n"
+printf "Generating rw/ro shortcuts\n"
 tee -a /etc/bash.bashrc > /dev/null <<'EOF'
 
 set_bash_prompt() {
@@ -111,8 +107,7 @@ PROMPT_COMMAND=set_bash_prompt
 EOF
 
 # create initialization script
-printf "\n\n##########\n"
-printf "Generating user-init script...\n\n"
+printf "Generating user-init script\n"
 tee /home/pi/.init-readonly-fs.sh > /dev/null <<'EOF'
 #!/bin/bash
 
@@ -149,6 +144,6 @@ systemctl enable init-readonly-fs.service
 
 # all done
 printf "\n\n##########\n"
-echo "Rebooting... cross your fingers [ENTER].\n"
+echo "Rebooting... cross your fingers and press [ENTER].\n"
 read
 reboot
