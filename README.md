@@ -4,8 +4,10 @@ Simple script to put Raspberry Pi OS Lite to readonly mode and heavily reduce th
 **Note that this only works for Raspberry Pi OS Lite**.
 
 ## Usage
-1. Clone the script to your Raspberry Pi using `git clone git@github.com:dominikberse/rpi-read-only.git`.
-2. Run `rpi-read-only/rpi-read-only.sh` and follow the instructions.
+```
+wget https://raw.githubusercontent.com/dominikberse/rpi-read-only/main/rpi-read-only.sh
+sudo ./rpi-read-only.sh
+```
 
 ## Fine tuning
 The problem here is that many applications running on the Raspberry Pi require read-write filesystem access. So whenever you install new applications or services, it might be neccessary to move their temporary files (usually log files) and folders to `/tmp`. This can usually be done easily be creating an appropriate hard link.
