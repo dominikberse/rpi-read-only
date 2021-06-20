@@ -14,7 +14,8 @@ printf "This script is intended to be used on a fresh installation.\n"
 printf "Backup any relevant data before executing this script.\n"
 printf "##########\n\n\n"
 
-read -p "Are you sure you want to continue? [yes|No]\n" confirm
+printf "Are you sure you want to continue? [yes|No]\n"
+read confirm
 case $confirm in
     yes ) ;;
     * ) echo "Please type [yes] in order to continue. Quitting." ; exit 1;;
@@ -27,7 +28,8 @@ apt-get update -y
 
 # upgrade system if neccessary
 printf "\n\n##########\n"
-read -p "Upgrade system before going read-only? [y|n]\n" yn
+printf "Upgrade system before going read-only? [y|n]\n"
+read yn
 case $yn in
     [Yy]* ) apt-get upgrade -y ; break;;
     [Nn]* ) break;;
@@ -149,5 +151,5 @@ systemctl enable init-readonly-fs.service
 # all done
 printf "\n\n##########\n"
 echo "Rebooting... cross your fingers [ENTER].\n"
-read -p
+read
 reboot
