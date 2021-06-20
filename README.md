@@ -10,6 +10,8 @@ chmod +x rpi-read-only.sh
 sudo ./rpi-read-only.sh
 ```
 
+Wait for script to finish and reboot. The Raspberry Pi should start in `ro` (read-only) mode. Use `ro` or `rw` to switch between read-only and read-write. 
+
 ## Fine tuning
 The problem here is that many applications running on the Raspberry Pi require read-write filesystem access. So whenever you install new applications or services, it might be neccessary to move their temporary files (usually log files) and folders to `/tmp`. This can usually be done easily be creating an appropriate hard link.
 
