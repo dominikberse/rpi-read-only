@@ -1,14 +1,27 @@
 #!/bin/bash
 set -e
 
+# disclaimer
+printf "##########\n"
+printf "WARNING: This may break your system!\n"
+printf "This script is intended to be used on a fresh installation.\n"
+printf "Backup any relevant data before executing this script.\n"
+printf "##########\n\n\n"
+
+read -p "Are you sure you want to continue? [yes|No]"
+case $yn in
+    [Yy]* ) break;;
+    * ) echo "Please type [yes] in order to continue.";; exit;;
+esac
+
 # update system
-printf "\n\n##########"
-printf "Updating sources..."
+printf "\n\n##########\n"
+printf "Updating sources...\n"
 apt-get update -y
 
 # upgrade system if neccessary
-printf "\n\n##########"
-printf "Upgrade system before going read-only? [Y/n]"
+printf "\n\n##########\n"
+printf "Upgrade system before going read-only? [Y/n]\n"
 select yn in "Y" "N" ""; do
     case $yn in
         y|Y ) apt-get upgrade -y; break;;
@@ -17,20 +30,20 @@ select yn in "Y" "N" ""; do
 done
 
 # change logger
-printf "\n\n##########"
-printf "Installing in-memory logger..."
+printf "\n\n##########\n"
+printf "Installing in-memory logger...\n"
 apt-get install -y busybox-syslogd
 apt-get remove -y --purge rsyslog
 
 # remove unnecessary
-printf "\n\n##########"
-printf "Cleaning up..."
+printf "\n\n##########\n"
+printf "Cleaning up...\n"
 apt-get remove -y --purge triggerhappy logrotate dphys-swapfile
 apt-get autoremove -y --purge
 
 # edit /boot/cmdline.txt
-printf "\n\n##########"
-printf "Updating /boot/config.txt"
+printf "\n\n##########\n"
+printf "Updating /boot/config.txt\n"
 sed -i '$s/$/ fastboot noswap ro/' /boot/cmdline.txt
 
 # set mountpoints
