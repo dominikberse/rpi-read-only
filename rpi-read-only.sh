@@ -30,9 +30,7 @@ apt-get update -y
 printf "\n\n##########\n"
 read -p "Upgrade system before going read-only (this will take time)? [y|N] "
 case $yn in
-    [Yy]* ) apt-get upgrade -y ; break;;
-    [Nn]* ) break;;
-    * ) break;;
+    [Yy]* ) apt-get upgrade -y ;;
 esac
 
 # change logger
