@@ -89,6 +89,10 @@ EOF
 # create link to local user directory
 ln -s /etc/tmpfiles.d/tmpfiles.conf /home/pi/.tmpfiles.conf
 
+# force time to be restored on reboot
+printf "Set time update after every reboot\n"
+timedatectl set-ntp True
+
 # provide shortcuts
 printf "Generating rw/ro shortcuts\n"
 tee -a /etc/bash.bashrc > /dev/null <<'EOF'
